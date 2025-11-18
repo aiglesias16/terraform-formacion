@@ -1,0 +1,32 @@
+provider "aws" {
+  region = "us-east-2"
+}
+
+resource "aws_instance" "example" {
+    ami = "ami-0fb653ca2d3203ac1"
+    instance_type = "t3.micro"
+    vpc_security_group_ids = [aws_security_group.web_server_sg.id]
+
+    user_data = <<-EOF
+                #!/bin/bash
+                echo "Hello, World!" > index.html
+                nohup busybox httpd -f -p ${var.server_port} &
+                EOF
+    user_data_replace_on_change = true
+
+    tags = {
+      Name = "terraform-configurable-web-server-example"
+    }
+}
+
+resource "aws_security_group" "web_server_sg" {
+    name        = "web-server-sg"
+    description = "Allow HTTP inbound traffic"
+
+    ingress {
+        from_port   = var.server_port
+        to_port     = var.server_port
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
