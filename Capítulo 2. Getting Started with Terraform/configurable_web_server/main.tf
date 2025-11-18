@@ -30,14 +30,3 @@ resource "aws_security_group" "web_server_sg" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
-
-variable "server_port" {
-    description = "The port on which the web server will listen"
-    type        = number
-    default     = 8080
-}
-
-output "public_ip" {
-    description = "The public IP address of the web server"
-    value       = aws_instance.example.public_ip
-}
