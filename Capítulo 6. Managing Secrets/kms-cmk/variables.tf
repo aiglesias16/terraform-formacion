@@ -1,0 +1,5 @@
+variable "alias" {
+  description = "The alias to use for the CMK"
+  type        = string
+  default     = "kms-cmk-example"
+}
